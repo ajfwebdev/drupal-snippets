@@ -121,7 +121,7 @@ function ajf_build_form($form, &$form_state, $type, $custData = array()) {
     '#value' => t('Add an Email Address'),
     '#href' => '',
     '#ajax' => array(
-      'callback' => 'freebil_ajax_add_email',
+      'callback' => 'ajf_ajax_add_email',
       'wrapper' => 'email',
      ),
    );
@@ -153,6 +153,6 @@ function ajf_build_form($form, &$form_state, $type, $custData = array()) {
   return $form; 
 }
 
-function freebil_ajax_add_email($form, $form_state) {
+function ajf_ajax_add_email($form, $form_state) {
   return $form['email'];
 }
