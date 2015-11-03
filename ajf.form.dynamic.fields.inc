@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Code to add additional fields to a form dynamically as needed. The user clicks a button and another instance of the field(s) is added.
+ * Code to add additional fields to a form dynamically as needed.
+ *
+ * The user clicks a button and another instance of the field(s) is added.
  *
  * This is based on code shared by Sam in his blog article:
  * http://rapiddg.com/blog/use-ajax-support-multiple-item-values-custom-drupal-7-forms
@@ -10,7 +12,7 @@
  */
  
 function ajf_customer_create_form($form, &$form_state) {
-  // Set the page breadcrumb
+  // Set the page breadcrumb.
   $crumbs = array(
     l(t('Home'), '<front>'),
     l(t('Administration'), 'admin'),
@@ -43,8 +45,9 @@ function ajf_customer_create_form_submit($form, &$form_state) {
   'phone3_type' => $form_state['values']['phone3-type'],
   'description' => $form_state['values']['description'],
   );
-  
-  $custId = ajf_customer_insert($custRow); //function definition omitted in this snippet.
+
+  //Function definition omitted in this snippet.
+  $custId = ajf_customer_insert($custRow);
   
   for ($i = 1; $i <= $form_state['storage']['email_count']; $i++) {
     if (isset($form_state['values']['email'][$i]) && (!empty($form_state['values']['email'][$i]['email_addr']))) {
@@ -55,7 +58,8 @@ function ajf_customer_create_form_submit($form, &$form_state) {
         'default_email' => $form_state['values']['email'][$i]['default_email'],
         'description' => $form_state['values']['email'][$i]['email_desc'],
       );
-      $emailId = ajf_email_insert($emailRow); //function definition omitted in this snippet.
+      // Function definition omitted in this snippet.
+      $emailId = ajf_email_insert($emailRow);
     }
   }
   
