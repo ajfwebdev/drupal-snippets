@@ -1,23 +1,15 @@
 <?php
 /**
- * Uses radios to determine which form fields to display to the user.
+ * Uses form states API to conditionally display form fields.
  *
- * This does a built-in ajax call based on the '#states' and 'visible' array elements
- * on the dynamic fields.
+ * Uses a checkbox field to determine which conditional fields to display.
  */
-
-  // Conditionaly display quantity and units fields.
+ 
+  // Conditionaly display quantity, units, or billed amount fields.
   $form['entry_type'] = array(
-    '#type' => 'radios',
-    '#title' => t('Entry Type'),
-    '#options' => drupal_map_assoc(
-      array(
-        t('Billed Amount'),
-        t('Quantity'),
-      )
-    ),
-    '#default_value' => 'Billed Amount',
-    '#description' => t('Use Billed Amount if you only have one amount to charge. Select Quantity if have more than one of the same item to charge for.'),
+    '#type' => 'checkbox',
+    '#title' => t('Display Quantity and Unit Cost fields.'),
+    '#default_value' => FALSE,
   );
   $form['quantity'] = array(
     '#type' => 'textfield',
@@ -28,7 +20,7 @@
     '#description' => t('Enter the number of units sold.'),
     '#states' => array(
       'visible' => array(
-        ':input[name="entry_type"]' => array('value' => t('Quantity'))
+        ':input[name="entry_type"]' => array('checked' => TRUE)
       ),
     ),
   );
@@ -41,7 +33,7 @@
     '#description' => t('Enter the cost for one unit.'),
     '#states' => array(
       'visible' => array(
-        ':input[name="entry_type"]' => array('value' => t('Quantity'))
+        ':input[name="entry_type"]' => array('checked' => TRUE)
       ),
     ),
   );
@@ -54,7 +46,7 @@
     '#description' => t('Enter the total amount billed for this item.'),
     '#states' => array(
       'visible' => array(
-        ':input[name="entry_type"]' => array('value' => t('Billed Amount'))
+        ':input[name="entry_type"]' => array('checked' => FALSE)
       ),
     ),
   );
