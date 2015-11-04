@@ -51,4 +51,7 @@ function ajf_data_download($var1, $var2) {
 
   // Now download the text file. The 'print' function is all you need.
   print $text;
+  // Any output after this point will be added to the downloaded file!
+  // The exit function acts like a redirect back to the prior page.
+  drupal_exit();
 }
