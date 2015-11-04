@@ -43,11 +43,12 @@
 function ajf_data_download($var1, $var2) {
   // Here I'll just use $var1 and $var2 to format the file name.
   $filename = 'invoice_' . $var1 . '_' . $var2 . '_format.txt';
+  $text = 'Hello World!';
 
   // Now set the HTTP headers.
   header("Content-type: text/plain");
   header("Content-Disposition: attachment; filename=" . $filename);
 
   // Now download the text file. The 'print' function is all you need.
-  print $email_text;
+  print $text;
 }
