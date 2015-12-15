@@ -4,7 +4,7 @@
  * The Drupal CRUD Operations
  *
  * This snippet show examples of using the Drupal Database API
- * to perform the Create, Retrieve, Update, and Delete (or CRUD) operations.
+ * to perform the Create, Read, Update, and Delete (or CRUD) operations.
  *
  * This code is from the Freebil Drupal module. It shows how the CRUD
  * operations are used to manage and access email address data.
