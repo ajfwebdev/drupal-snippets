@@ -1,0 +1,25 @@
+<?php
+/**
+ * @file
+ * Code for the CT: Admitted Students Redesign Home feature.
+ */
+
+include_once 'a_feature_module.features.inc';
+
+/**
+  * Implements hook_ctools_plugin_directory().
+  */
+function a_feature_module_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && $plugin_type == 'content_types') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+function a_feature_module_theme() {
+  return array(
+    'my_blogs_block' => array(
+      'variables' => array('items' => array()),
+      'template' => 'theme/my-blogs-block',
+    ),
+  );
+}
