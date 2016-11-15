@@ -1,0 +1,24 @@
+<?php
+/**
+ * @file
+ * Theme and Plugin functions for the View Plugin.
+ */
+
+
+/**
+  * Implements hook_ctools_plugin_directory().
+  */
+function view_plugin_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && $plugin_type == 'content_types') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+function view_plugin_theme() {
+  return array(
+    'view_block' => array(
+      'variables' => array('items' => array()),
+      'template' => 'theme/view-block',
+    ),
+  );
+}
