@@ -54,3 +54,9 @@ catch (EntityMetadataWrapperException $e) {
  * entity this way, though the chaining may vary based on the referenced entity's data structure.
  */
 $referenced_entity_title = $my_entity_wrapper->field_my_entity_reference_field->title->value();
+
+// Gets the entity ID of the referenced entity via the entity reference field.
+$referenced_entity_id = $my_entity_wrapper->field_my_entity_reference_field->id->value();
+
+// You can create another wrapper for the referenced entity if that's more convenient.
+$referenced_entity_wrapper = entity_metadata_wrapper('my_referenced_entity_name', $referenced_entity_id);
