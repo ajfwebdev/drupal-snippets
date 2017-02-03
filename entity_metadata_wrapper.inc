@@ -27,3 +27,30 @@ try {
 catch (EntityMetadataWrapperException $e) {
   watchdog(__FUNCTION__, 'User Profile Exception: %t', array('%t' => $e->getMessage()));
 }
+
+/**
+ * Can also create an entity metadata wrapper using the entity ID instead of the object.
+ * When you do this the wrapper is lazy-loaded, meaning it is not populated with data at first.
+ * It is only populated/loaded when you access the field data.
+ *
+ * The entity name is used even when the ID belongs to a particular bundle of that entity.
+ * You don't have to specify the bundle name.
+ * Entity IDs are unique (within the entity at least), so it will find the correct bundle instance.
+ *
+ * $my_entity_wrapper (below) will be lazy-loaded. If you inspect the wrapper after this instanciation in a
+ * debugger it will appear to be empty.
+ */
+ $my_entity_wrapper = entity_metadata_wrapper('my_entity_name', $entity_id);
+
+ // This statement will cause the wrapper to load the field data and return it.
+ $my_field = $my_entity_wrapper->field_my_field_name->value();
+
+/**
+ * If the entity has an entity reference field to another entity, you can access the referenced
+ * entity's data also from the same wrapper.
+ * I've heard this process is called "chaining".
+ *
+ * 'title' here is the title field of the referenced entity. You can get any field in the referenced
+ * entity this way, though the chaining may vary based on the referenced entity's data structure.
+ */
+$referenced_entity_title = $my_entity_wrapper->field_my_entity_reference_field->title->value();
