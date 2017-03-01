@@ -60,3 +60,36 @@ $referenced_entity_id = $my_entity_wrapper->field_my_entity_reference_field->id-
 
 // You can create another wrapper for the referenced entity if that's more convenient.
 $referenced_entity_wrapper = entity_metadata_wrapper('my_referenced_entity_name', $referenced_entity_id);
+
+/**
+ * Field Collection Data.
+ * Example of getting data from a multi-instance field collection field on a node type.
+ *
+ * This code came from a cTools plugin, but the techniques can be used in any module.
+ */
+
+   $node_wrapper = entity_metadata_wrapper('node', $node_id);
+
+  try {
+    // First we get data from 2 regular fields.
+    $facts_title_small = $node_wrapper->field_facts_title_small->value();
+    $facts_title_large = $node_wrapper->field_facts_title_large->value();
+
+    // field_facts_statistic is a field collection that can have multiple instances on the node.
+    $statistic_collection = $node_wrapper->field_facts_statistic->value();
+
+    foreach ($statistic_collection as $id => $instance) {
+      // We create a wrapper for each instance of the field collection.
+      $collection_wrapper = entity_metadata_wrapper('field_collection_item', $instance);
+      // Using the collection wrapper we can access the individual fields.
+      $statistic_value = $collection_wrapper->field_facts_statistic_value->value();
+      $statistic_desc = $collection_wrapper->field_facts_statistic_descriptio->value();
+      $facts_items[] = array(
+        'fact_stat' => $statistic_value,
+        'fact_desc' => $statistic_desc,
+      );
+    }
+  }
+  catch (EntityMetadataWrapperException $e) {
+    watchdog(__FUNCTION__, 'User Profile Exception: %t', array('%t' => $e->getMessage()));
+  }
