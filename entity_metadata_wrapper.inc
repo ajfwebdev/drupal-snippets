@@ -93,3 +93,26 @@ $referenced_entity_wrapper = entity_metadata_wrapper('my_referenced_entity_name'
   catch (EntityMetadataWrapperException $e) {
     watchdog(__FUNCTION__, 'User Profile Exception: %t', array('%t' => $e->getMessage()));
   }
+
+/**
+ * EMW for a link field with access to URL and Title field items.
+ */
+  $node_wrapper = entity_metadata_wrapper('node', $nid);
+
+  $link_url = check_url($node_wrapper->field_cta_link->url->value());
+  $link_title = check_plain($node_wrapper->field_cta_link->title->value());
+
+/**
+ * EMW for an image field.
+ */
+  $node_wrapper = entity_metadata_wrapper('node', $nid);
+  // Accessing the field value returns an array of the image field items.
+  $cta_image_array = $node_wrapper->field_cta_hero_image->value();
+
+  // The image url is not available, only the uri which starts with //public/.
+  $image_uri = $cta_image_array['uri'];
+  // Use file_create_url to convert the uri to a usable url.
+  $image_url = file_create_url($image_uri);
+
+  // Getting the alt text field item.
+  $image_alt = check_plain($cta_image_array['alt']);
