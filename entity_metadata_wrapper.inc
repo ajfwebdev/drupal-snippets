@@ -116,3 +116,19 @@ $referenced_entity_wrapper = entity_metadata_wrapper('my_referenced_entity_name'
 
   // Getting the alt text field item.
   $image_alt = check_plain($cta_image_array['alt']);
+
+/**
+ * EMW for a text area field like a Body field.
+ */
+  $node_wrapper = entity_metadata_wrapper('node', $my_node);
+  // Regular value() method returns an array of value, safe_value, etc.
+  $long_msg = $node_wrapper->field_long_msg->value();
+
+  // Returns filtered value.
+  $long_msg = $node_wrapper->field_long_msg->value->value();
+
+  // Unfiltered value.
+  $long_msg = $node_wrapper->field_long_msg->value->raw();
+
+  // The selected text format.
+  $long_msg = $node_wrapper->field_long_msg->format->value();
