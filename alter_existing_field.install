@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Installation and update functions for alter_existing_field module.
+ * Example of how to alter an existing field that already has data stored in the DB.
+ */
+
+/**
+ * Updates field_my_number field to allow 8 characters.
+ */
+function alter_existing_field_update_7000() {
+  $items = array();
+  $maxlength = 8;
+  _field_maxlength_fix('field_my_number', $maxlength);
+  return $items;
+}
+
+/**
+ * Updates maxlength of field_name.
+ */
+function _field_maxlength_fix($field_name, $maxlength) {
+  _alter_field_table($field_name, $maxlength);
+  $data = _get_field_data($field_name);
+  $data = _fix_field_data($data, $maxlength);
+  _update_field_config($data, $field_name);
+}
+
+/**
+ * Updates maxlength of field_data_field_name table.
+ */
+function _alter_field_table($field_name, $maxlength) {
+  db_query("ALTER TABLE field_data_" . $field_name . " CHANGE " . $field_name . "_value " . $field_name . "_value VARCHAR( " . $maxlength . " ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL");
+  db_query("ALTER TABLE field_revision_" . $field_name . " CHANGE " . $field_name . "_value " . $field_name . "_value VARCHAR( " . $maxlength . " ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL");
+}
+
+/**
+ * Retrieves field data from field_config table.
+ */
+function _get_field_data($field_name) {
+  $qry = "SELECT data FROM field_config WHERE field_name = :field_name";
+  $result = db_query($qry, array(':field_name' => $field_name))->fetchObject();
+  return unserialize($result->data);
+}
+
+/**
+ * Updates maxlength of field_data.
+ */
+function _fix_field_data($data, $maxlength) {
+  $data['settings']['max_length'] = (string) $maxlength;
+  return serialize($data);
+}
+
+/**
+ * Updates field_config for a field.
+ */
+function _update_field_config($data, $field_name) {
+  $qry = "UPDATE field_config SET data = :data WHERE field_name = :field_name";
+  db_query($qry, array(':data' => $data, ':field_name' => $field_name));
+}
