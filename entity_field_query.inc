@@ -32,6 +32,9 @@ function my_module_get_entities_by_date_range($id, $start_date, $end_date) {
 /**
  * Example where one fieldCondition is on an Entity Reference field.
  *
+ * Where the reference field has multiple values, it still seems to search
+ * all values for the given target_id value.
+ *
  * @param string $entity_reference_id
  *   The entity reference ID to get Bundle objects for.
  * @param array $status_array

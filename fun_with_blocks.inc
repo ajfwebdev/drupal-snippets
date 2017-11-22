@@ -55,6 +55,17 @@ function my_module_blocks_block_info_alter(&$blocks, $theme, $code_blocks) {
       $blocks['menu']['menu-main-menu']['region'] = 'header';
     }
 
+    // Place the Verticals Menu block in the hero region.
+    if (isset($blocks['menu']['menu-verticals'])) {
+      $blocks['menu']['menu-verticals']['status'] = 1;
+      $blocks['menu']['menu-verticals']['cache'] = 1;
+      $blocks['menu']['menu-verticals']['region'] = 'hero';
+      $blocks['menu']['menu-verticals']['title'] = '<none>';
+      $blocks['menu']['menu-verticals']['visibility'] = 1;
+      $blocks['menu']['menu-verticals']['pages'] = '<front>';
+      $blocks['menu']['menu-verticals']['custom'] = FALSE;
+    }
+
     // Place the Latest News view block in the Lower Full Width region.
     if (isset($blocks['views']['latest_news-block'])) {
       $blocks['views']['latest_news-block']['status'] = 1;
