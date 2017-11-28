@@ -86,6 +86,26 @@ function _mymodule_er_field_validate($element, &$form_state, $form) {
 }
 
 /**
+ * An alternate foreach loop for the above, where it will highlight only those
+ * instances in the multivalue entity reference field that have errors.
+ */
+      foreach ($form_state['values']['field_er_field']['und'] as $er_instance_key => $er_instance) {
+        if (($er_instance_key === 0) || ($er_instance_key != 'add_more')) {
+          $target_id_raw = $er_instance['target_id'];
+
+          // We only want the target_id number, not other strings.
+          $target_id = preg_replace('/[^0-9]/', '', $target_id_raw);
+
+          // Is this instance invalid?
+          if (!_mymodule_valid_instance($target_id)) {
+
+            // Report the error and highlight the field instance in error.
+            form_set_error('field_er_field][und][' . $er_instance_key, t('Selected entity is invalid: %target_id_raw', array('%target_id_raw' => $target_id_raw)));
+          }
+        }
+      }
+
+/**
  * Checks if toolkit module is used by any toolkit.
  *
  * 'Module' here is the name of a custom a content type (not referring to ta custom module!).
