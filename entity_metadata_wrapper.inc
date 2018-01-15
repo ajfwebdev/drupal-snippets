@@ -132,3 +132,25 @@ $referenced_entity_wrapper = entity_metadata_wrapper('my_referenced_entity_name'
 
   // The selected text format.
   $long_msg = $node_wrapper->field_long_msg->format->value();
+
+/**
+ * Setting entity data via EMW.
+ */
+  // Create a new entity and populate it's data.
+  $entity_type = 'myentity_type';
+  $entity = entity_create($entity_type, array('type' => 'myentity_bundle'));
+
+  try {
+    $emw = entity_metadata_wrapper($entity_type, $entity);
+    $emw->title = "A Title";
+    $emw->field_myentity_data1 = 123;
+    $emw->field_myentity_data2 = "some data";
+    $emw->field_myentity_date_field = REQUEST_TIME;
+    $emw->field_myentity_entity_reference_field->set(126926);
+    $emw->field_drupal_user_id->set(88191);
+
+    $emw->save();
+  }
+  catch (EntityMetadataWrapperException $e) {
+    watchdog(__FUNCTION__, 'My Entity access error: %t', array('%t' => $e->getMessage()));
+  }
