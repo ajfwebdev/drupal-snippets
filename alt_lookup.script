@@ -1,0 +1,77 @@
+#!/usr/bin/env drush
+
+drush_print("This script queries the Drupal database looking for image alt text in text area fields\n");
+
+$field_machine_names = array(
+  'body',
+  'field_body_text',
+  'field_summary',
+);
+
+$count = 0;
+
+/* drush_print("Fields containing images with alt parameter and figcaption elements");
+foreach ($field_machine_names as $machine_name) {
+  $table_name = 'field_data_' . $machine_name;
+  $column_name = $machine_name . '_value';
+  $count = altlookup_alt_caption_count($table_name, $column_name);
+  drush_print("For $machine_name the count is $count");
+} */
+
+drush_print("\nFields containing images with alt parameter");
+foreach ($field_machine_names as $machine) {
+  $table = 'field_data_' . $machine;
+  $column = $machine . '_value';
+  $count = altlookup_alt_count($table, $column);
+  drush_print("For $machine the count is $count");
+}
+
+drush_print("\nBlock content containing images with alt parameter");
+$count = altlookup_block_alt_count();
+drush_print($count);
+
+drush_print("\nTaxonomy Term content containing images with alt parameter");
+$count = altlookup_term_alt_count();
+drush_print($count);
+
+function altlookup_block_alt_count() {
+  $result = db_query("SELECT body from block_custom where body like '% alt=%'");
+  $row_count = $result->rowCount();
+  return $row_count;
+}
+
+function altlookup_term_alt_count() {
+  $result = db_query("SELECT description from taxonomy_term_data where description like '% alt=%'");
+  $row_count = $result->rowCount();
+  return $row_count;
+}
+
+function altlookup_alt_count($table_name, $column_name) {
+  $query = "SELECT " . $column_name . "
+    FROM {" . $table_name . "}
+    WHERE " . $column_name . " LIKE '% alt=%'";
+  $result = db_query($query);
+  $row_count = $result->rowCount();
+  return $row_count;
+}
+
+function altlookup_alt_caption_count($table_name, $column_name) {
+  $query = "SELECT " . $column_name . "
+    FROM {" . $table_name . "}
+    WHERE " . $column_name . " LIKE '% alt=%'
+    AND " . $column_name . " LIKE '%figcaption%'";
+  $result = db_query($query);
+  $row_count = $result->rowCount();
+  return $row_count;
+}
+
+/* function altlookup_get_variables() {
+  $result = db_query("SELECT name FROM {variable} limit 2");
+
+  $out_array = array();
+  foreach ($result as $record) {
+    $name = check_plain($record->name);
+    $out_array[] = $name;
+  }
+  return $out_array;
+} */
