@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * An install hook that changes a field from text to long text type.
+ * It changes the field data and field revision storage.
+ */
+
+/**
+ * Alters field_my_text and reverts related features.
+ */
+function my_module_update_7160() {
+
+  // Changes field_my_text from text to long text.
+  db_query("UPDATE {field_config} SET type = 'text_long' WHERE field_name = 'field_my_text'");
+
+  // For field data.
+  db_drop_primary_key('field_data_field_my_text');
+  db_change_field('field_data_field_my_text', 'field_my_text_value', 'field_my_text_value',
+    [
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+    ],
+    [
+      'primary key' => [
+        'entity_type',
+        'entity_id',
+        'deleted',
+        'delta',
+        'language',
+      ],
+    ]
+  );
+
+  // For field revision.
+  db_drop_primary_key('field_revision_field_my_text');
+  db_change_field('field_revision_field_my_text', 'field_my_text_value', 'field_my_text_value',
+    [
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+    ],
+    [
+      'primary key' => [
+        'entity_type',
+        'entity_id',
+        'deleted',
+        'delta',
+        'language',
+      ],
+    ]
+  );
+
+  field_cache_clear(TRUE);
+
+  // Reverts features for field change and new text format.
+  $modules = [
+    'my_features_module',
+    'my_other_features_module',
+  ];
+
+  foreach ($modules as $module) {
+    features_revert_module($module);
+  }
+}
