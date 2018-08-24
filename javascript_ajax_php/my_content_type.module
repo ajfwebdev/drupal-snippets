@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * Code for an Ajax callback that returns file type for a given file ID.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function my_content_type_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    case 'article_node_form':
+      $form['#after_build'][] = 'my_content_type_after_build';
+      break;
+  }
+}
+
+/**
+ * Implements hook_after_build().
+ */
+function my_content_type_after_build($form, &$form_state) {
+  $path = drupal_get_path('module', 'my_content_type');
+  drupal_add_js("$path/js/my_content_type_edit_form.js");
+  return $form;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function my_content_type_menu() {
+  $items['my-path/ajax/file-type/%'] = array(
+    'title' => 'AJAX callback for getting a Media file type',
+    'page callback' => 'my_content_type_get_file_type',
+    'page arguments' => array(3),
+    'description' => 'Return the file type for the given file ID.',
+    'type' => MENU_CALLBACK,
+    'access callback' => 'my_content_type_user_has_role',
+    'access arguments' => [
+      [
+        'administrator',
+        'content admin',
+        'content submitter',
+      ],
+    ],
+  );
+
+  return $items;
+}
+
+/**
+ * Gets the file type for the input file ID.
+ *
+ * @param string $fid
+ *   The file ID.
+ */
+function my_content_type_get_file_type($fid) {
+  $file = file_load($fid);
+  if (!is_null($file)) {
+    $return_array['success'] = 'true';
+    $return_array['data'] = $file->type;
+  }
+  else {
+    $return_array['success'] = 'false';
+    $return_array['data'] = NULL;
+  }
+  echo json_encode($return_array);
+}
+
+/**
+ * Determine if the current user has one of the input roles.
+ *
+ * @param array $roles
+ *   User roles that should have access.
+ *
+ * @return bool
+ *   True if the current user has access.
+ */
+function my_content_type_user_has_role(array $roles) {
+  global $user;
+
+  foreach ($roles as $role) {
+    if (is_array($user->roles) && in_array($role, array_values($user->roles))) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
