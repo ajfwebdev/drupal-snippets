@@ -1,0 +1,4 @@
+name = AJF Test Module
+description = "For adhoc PHP code testing."
+package = "Custom"
+core = 7.x

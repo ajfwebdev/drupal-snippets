@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Functions for testing PHP code on a Drupal 7 website.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ajf_test_menu() {
+  $items['ajf-test'] = array(
+    'title' => 'AJF Test',
+    'page callback' => 'ajf_test_page',
+    'access arguments' => array('Administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Use this function for testing PHP code.
+ *
+ * @return string
+ *   The markup for the page.
+ */
+function ajf_test_page() {
+  $output = '';
+
+  $output .= '<h1>AJF Test</h1>';
+  $output .= '<p>This is a page for testing PHP code. See the ajf_test custom module for code used in generating this page.</p>';
+
+  return $output;
+}
